@@ -29,6 +29,17 @@ jobs:
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
+      - name: Limpiar banderas obsoletas (-G) de Xcode y Pods
+        run: |
+          find . -type f \( -name "*.pbxproj" -o -name "*.xcconfig" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
+
+      - name: Instalar y Actualizar Pods
+        run: |
+          cd ios
+          pod install --repo-update
+          find . -type f \( -name "*.pbxproj" -o -name "*.xcconfig" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
+          cd ..
+
       - name: Compilar iOS (No-codesign)
         run: flutter build ios --release --no-codesign
 
