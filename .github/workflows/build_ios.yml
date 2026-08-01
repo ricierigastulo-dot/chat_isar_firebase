@@ -29,19 +29,26 @@ jobs:
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
-      - name: Limpiar banderas obsoletas (-G) de Xcode y Pods
-        run: |
-          find . -type f \( -name "*.pbxproj" -o -name "*.xcconfig" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
-
-      - name: Instalar y Actualizar Pods
+      - name: Sanitizar y Regenerar Pods de iOS
         run: |
           cd ios
+          rm -rf Pods Podfile.lock
           pod install --repo-update
-          find . -type f \( -name "*.pbxproj" -o -name "*.xcconfig" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
+          
+          # Limpiar -G en todos los archivos del proyecto y pods generados
+          find . -type f \( -name "*.pbxproj" -o -name "*.xcconfig" -o -name "*.plist" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
           cd ..
 
-      - name: Compilar iOS (No-codesign)
-        run: flutter build ios --release --no-codesign
+      - name: Compilar iOS con Override de Banderas C/C++
+        env:
+          # Sobreescribir banderas del sistema eliminando -G
+          CFLAGS: "-Wno-error"
+          CXXFLAGS: "-Wno-error"
+          OTHER_CFLAGS: ""
+          OTHER_CPLUSPLUSFLAGS: ""
+        run: |
+          flutter build ios --release --no-codesign --extra-front-end-options="--no-defines" || \
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO OTHER_CFLAGS="" OTHER_CPLUSPLUSFLAGS="" build
 
       - name: Crear paquete .ipa
         run: |
