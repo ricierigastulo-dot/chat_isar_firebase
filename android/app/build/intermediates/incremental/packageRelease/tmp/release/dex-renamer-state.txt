@@ -1,0 +1,10 @@
+#Thu Jul 30 12:42:16 PET 2026
+base.0=C\:\\Users\\ricieri.gastulo\\develop\\mesajeria\\chat_isar_firebase\\android\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+base.1=C\:\\Users\\ricieri.gastulo\\develop\\mesajeria\\chat_isar_firebase\\android\\app\\build\\intermediates\\desugar_lib_dex\\release\\classes1000.dex
+base.2=C\:\\Users\\ricieri.gastulo\\develop\\mesajeria\\chat_isar_firebase\\android\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes2.dex
+path.0=classes.dex
+path.1=classes1000.dex
+path.2=classes2.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex

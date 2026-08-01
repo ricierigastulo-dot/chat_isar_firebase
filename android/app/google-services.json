@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "331155115177",
+    "project_id": "rardak-auditoria",
+    "storage_bucket": "rardak-auditoria.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331155115177:android:ee41e169df5664b4f8edb8",
+        "android_client_info": {
+          "package_name": "com.example.chat_isar_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzMeR4sosYsG8gAI1EdSOLhH38ee-pENw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331155115177:android:ccb3643e416f274ff8edb8",
+        "android_client_info": {
+          "package_name": "com.rardak.auditoria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzMeR4sosYsG8gAI1EdSOLhH38ee-pENw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331155115177:android:01521e2de93596d9f8edb8",
+        "android_client_info": {
+          "package_name": "com.rardak.granja_porcina_rardak.prod"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzMeR4sosYsG8gAI1EdSOLhH38ee-pENw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

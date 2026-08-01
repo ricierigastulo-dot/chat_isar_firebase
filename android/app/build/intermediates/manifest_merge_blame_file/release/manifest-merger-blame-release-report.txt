@@ -1,0 +1,200 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.chat_isar_firebase"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="36" />
+10    <!--
+11         Required to query activities that can process text, see:
+12         https://developer.android.com/training/package-visibility and
+13         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+14
+15         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin.
+16    -->
+17    <queries>
+17-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:39:5-44:15
+18        <intent>
+18-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:40:9-43:18
+19            <action android:name="android.intent.action.PROCESS_TEXT" />
+19-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:41:13-72
+19-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:41:21-70
+20
+21            <data android:mimeType="text/plain" />
+21-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:42:13-50
+21-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:42:19-48
+22        </intent>
+23    </queries>
+24    <!-- Although the *SdkVersion is captured in gradle build files, this is required for non gradle builds -->
+25    <!-- <uses-sdk android:minSdkVersion="14" /> -->
+26    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+26-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:10:5-79
+26-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:10:22-76
+27    <uses-permission android:name="android.permission.INTERNET" />
+27-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:11:5-67
+27-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:11:22-64
+28
+29    <application
+30        android:name="android.app.Application"
+30-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:4:9-42
+31        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+31-->[androidx.core:core:1.6.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\1ae5a3d217bcba2f242e7f5a628e3c28\transformed\core-1.6.0\AndroidManifest.xml:24:18-86
+32        android:extractNativeLibs="true"
+33        android:icon="@mipmap/ic_launcher"
+33-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:5:9-43
+34        android:label="chat_isar_firebase" >
+34-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:3:9-43
+35        <activity
+35-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:6:9-27:20
+36            android:name="com.example.chat_isar_firebase.MainActivity"
+36-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:7:13-41
+37            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+37-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:12:13-163
+38            android:exported="true"
+38-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:8:13-36
+39            android:hardwareAccelerated="true"
+39-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:13:13-47
+40            android:launchMode="singleTop"
+40-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:9:13-43
+41            android:taskAffinity=""
+41-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:10:13-36
+42            android:theme="@style/LaunchTheme"
+42-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:11:13-47
+43            android:windowSoftInputMode="adjustResize" >
+43-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:14:13-55
+44
+45            <!--
+46                 Specifies an Android theme to apply to this Activity as soon as
+47                 the Android process has started. This theme is visible to the user
+48                 while the Flutter UI initializes. After that, this theme continues
+49                 to determine the Window background behind the Flutter UI.
+50            -->
+51            <meta-data
+51-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:19:13-22:17
+52                android:name="io.flutter.embedding.android.NormalTheme"
+52-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:20:15-70
+53                android:resource="@style/NormalTheme" />
+53-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:21:15-52
+54
+55            <intent-filter>
+55-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:23:13-26:29
+56                <action android:name="android.intent.action.MAIN" />
+56-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:24:17-68
+56-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:24:25-66
+57
+58                <category android:name="android.intent.category.LAUNCHER" />
+58-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:25:17-76
+58-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:25:27-74
+59            </intent-filter>
+60        </activity>
+61        <!--
+62             Don't delete the meta-data below.
+63             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+64        -->
+65        <meta-data
+65-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:30:9-32:33
+66            android:name="flutterEmbedding"
+66-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:31:13-44
+67            android:value="2" />
+67-->C:\Users\ricieri.gastulo\develop\mesajeria\chat_isar_firebase\android\app\src\main\AndroidManifest.xml:32:13-30
+68
+69        <service
+69-->[:cloud_firestore] C:\Users\ricieri.gastulo\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-4.17.5\android\build\intermediates\merged_manifest\release\AndroidManifest.xml:8:9-12:19
+70            android:name="com.google.firebase.components.ComponentDiscoveryService"
+70-->[:cloud_firestore] C:\Users\ricieri.gastulo\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-4.17.5\android\build\intermediates\merged_manifest\release\AndroidManifest.xml:8:18-89
+71            android:directBootAware="true"
+71-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:32:13-43
+72            android:exported="false" >
+72-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:16:13-37
+73            <meta-data
+73-->[:cloud_firestore] C:\Users\ricieri.gastulo\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-4.17.5\android\build\intermediates\merged_manifest\release\AndroidManifest.xml:9:13-11:85
+74                android:name="com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar"
+74-->[:cloud_firestore] C:\Users\ricieri.gastulo\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-4.17.5\android\build\intermediates\merged_manifest\release\AndroidManifest.xml:10:17-134
+75                android:value="com.google.firebase.components.ComponentRegistrar" />
+75-->[:cloud_firestore] C:\Users\ricieri.gastulo\AppData\Local\Pub\Cache\hosted\pub.dev\cloud_firestore-4.17.5\android\build\intermediates\merged_manifest\release\AndroidManifest.xml:11:17-82
+76            <meta-data
+76-->[:firebase_core] C:\Users\ricieri.gastulo\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-2.32.0\android\build\intermediates\merged_manifest\release\AndroidManifest.xml:9:13-11:85
+77                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"
+77-->[:firebase_core] C:\Users\ricieri.gastulo\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-2.32.0\android\build\intermediates\merged_manifest\release\AndroidManifest.xml:10:17-124
+78                android:value="com.google.firebase.components.ComponentRegistrar" />
+78-->[:firebase_core] C:\Users\ricieri.gastulo\AppData\Local\Pub\Cache\hosted\pub.dev\firebase_core-2.32.0\android\build\intermediates\merged_manifest\release\AndroidManifest.xml:11:17-82
+79            <meta-data
+79-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:17:13-19:85
+80                android:name="com.google.firebase.components:com.google.firebase.firestore.FirebaseFirestoreKtxRegistrar"
+80-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:18:17-122
+81                android:value="com.google.firebase.components.ComponentRegistrar" />
+81-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:19:17-82
+82            <meta-data
+82-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:20:13-22:85
+83                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
+83-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:21:17-111
+84                android:value="com.google.firebase.components.ComponentRegistrar" />
+84-->[com.google.firebase:firebase-firestore:24.11.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\d50a2b5b8ac1a0c6fda1e044477cfaf5\transformed\jetified-firebase-firestore-24.11.0\AndroidManifest.xml:22:17-82
+85            <meta-data
+85-->[com.google.firebase:firebase-common-ktx:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\82e86ebb3f82e59c445a60e565714321\transformed\jetified-firebase-common-ktx-20.4.3\AndroidManifest.xml:12:13-14:85
+86                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+86-->[com.google.firebase:firebase-common-ktx:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\82e86ebb3f82e59c445a60e565714321\transformed\jetified-firebase-common-ktx-20.4.3\AndroidManifest.xml:13:17-116
+87                android:value="com.google.firebase.components.ComponentRegistrar" />
+87-->[com.google.firebase:firebase-common-ktx:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\82e86ebb3f82e59c445a60e565714321\transformed\jetified-firebase-common-ktx-20.4.3\AndroidManifest.xml:14:17-82
+88            <meta-data
+88-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:35:13-37:85
+89                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+89-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:36:17-109
+90                android:value="com.google.firebase.components.ComponentRegistrar" />
+90-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:37:17-82
+91        </service>
+92
+93        <provider
+93-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:23:9-28:39
+94            android:name="com.google.firebase.provider.FirebaseInitProvider"
+94-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:24:13-77
+95            android:authorities="com.example.chat_isar_firebase.firebaseinitprovider"
+95-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:25:13-72
+96            android:directBootAware="true"
+96-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:26:13-43
+97            android:exported="false"
+97-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:27:13-37
+98            android:initOrder="100" />
+98-->[com.google.firebase:firebase-common:20.4.3] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\550caa10e5e900909528e96d0610e688\transformed\jetified-firebase-common-20.4.3\AndroidManifest.xml:28:13-36
+99        <provider
+99-->[androidx.startup:startup-runtime:1.1.1] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\b4276dee776ac02c2a9a55fc3fbd5fe5\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:26:9-30:34
+100            android:name="androidx.startup.InitializationProvider"
+100-->[androidx.startup:startup-runtime:1.1.1] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\b4276dee776ac02c2a9a55fc3fbd5fe5\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:27:13-67
+101            android:authorities="com.example.chat_isar_firebase.androidx-startup"
+101-->[androidx.startup:startup-runtime:1.1.1] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\b4276dee776ac02c2a9a55fc3fbd5fe5\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:28:13-68
+102            android:exported="false" />
+102-->[androidx.startup:startup-runtime:1.1.1] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\b4276dee776ac02c2a9a55fc3fbd5fe5\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:29:13-37
+103
+104        <activity
+104-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\bf94353c72bbe81c4901beada4ea6b1d\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+105            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+105-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\bf94353c72bbe81c4901beada4ea6b1d\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+106            android:exported="false"
+106-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\bf94353c72bbe81c4901beada4ea6b1d\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+107            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+107-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\bf94353c72bbe81c4901beada4ea6b1d\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+108
+109        <uses-library
+109-->[androidx.window:window:1.0.0-beta04] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\4549aa4f2de662a3b11a1b61b637babf\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:25:9-27:40
+110            android:name="androidx.window.extensions"
+110-->[androidx.window:window:1.0.0-beta04] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\4549aa4f2de662a3b11a1b61b637babf\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:26:13-54
+111            android:required="false" />
+111-->[androidx.window:window:1.0.0-beta04] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\4549aa4f2de662a3b11a1b61b637babf\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:27:13-37
+112        <uses-library
+112-->[androidx.window:window:1.0.0-beta04] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\4549aa4f2de662a3b11a1b61b637babf\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:28:9-30:40
+113            android:name="androidx.window.sidecar"
+113-->[androidx.window:window:1.0.0-beta04] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\4549aa4f2de662a3b11a1b61b637babf\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:29:13-51
+114            android:required="false" />
+114-->[androidx.window:window:1.0.0-beta04] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\4549aa4f2de662a3b11a1b61b637babf\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:30:13-37
+115
+116        <meta-data
+116-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\8b8132862166914cbb93bf610c68c6f6\transformed\jetified-play-services-basement-18.3.0\AndroidManifest.xml:21:9-23:69
+117            android:name="com.google.android.gms.version"
+117-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\8b8132862166914cbb93bf610c68c6f6\transformed\jetified-play-services-basement-18.3.0\AndroidManifest.xml:22:13-58
+118            android:value="@integer/google_play_services_version" />
+118-->[com.google.android.gms:play-services-basement:18.3.0] C:\Users\ricieri.gastulo\.gradle\caches\transforms-3\8b8132862166914cbb93bf610c68c6f6\transformed\jetified-play-services-basement-18.3.0\AndroidManifest.xml:23:13-66
+119    </application>
+120
+121</manifest>
