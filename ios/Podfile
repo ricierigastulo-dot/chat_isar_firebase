@@ -43,8 +43,15 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target)
     
     target.build_configurations.each do |config|
-      # Forzar la versión mínima de iOS a 13.0 para evitar errores de compilación '-G' en C++/Clang con Firebase
+      # 1. Forzar iOS Deployment Target a 13.0
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      
+      # 2. Eliminar la bandera '-G' que hace fallar a Clang/Xcode en arm64 (BoringSSL/gRPC/Firebase)
+      %w[OTHER_CFLAGS OTHER_CPLUSPLUSFLAGS CFLAGS CXXFLAGS].each do |flag_key|
+        if config.build_settings[flag_key]
+          config.build_settings[flag_key] = config.build_settings[flag_key].gsub(/-G\b/, '')
+        end
+      end
     end
   end
 end
