@@ -29,15 +29,6 @@ jobs:
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
-      # PASO CLAVE: Elimina el flag '-G' directo de las fuentes de isar_flutter_libs en pub-cache
-      - name: Corregir flag -G en Isar
-        run: |
-          ISAR_PODSPEC=$(find ~/.pub-cache -name "isar_flutter_libs.podspec" 2>/dev/null | head -n 1)
-          if [ -n "$ISAR_PODSPEC" ]; then
-            echo "Encontrado podspec de Isar en: $ISAR_PODSPEC"
-            sed -i '' 's/-G//g' "$ISAR_PODSPEC"
-          fi
-
       - name: Compilar iOS (No-codesign)
         run: flutter build ios --release --no-codesign
 
