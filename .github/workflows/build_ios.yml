@@ -30,17 +30,7 @@ jobs:
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
-      # Regenera enlaces y la carpeta ios/Flutter/podhelper.rb
-      - name: Regenerar enlaces nativos de iOS
-        run: flutter create . --platforms=ios
-
-      # Reinstala los pods aplicando nuestro Podfile (con iOS 13.0 forzado)
-      - name: Actualizar e Instalar CocoaPods
-        run: |
-          cd ios
-          pod install --repo-update
-          cd ..
-
+      # Flutter se encarga de crear podhelper.rb, sincronizar CocoaPods y compilar
       - name: Compilar iOS (No-codesign)
         run: flutter build ios --release --no-codesign
 
