@@ -29,9 +29,18 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-    # Fuerza a que Isar, Firebase y todos los pods compilen para iOS 13.0 (Elimina el error -G)
     target.build_configurations.each do |config|
+      # 1. Ajustar Deployment Target a iOS 13.0
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      
+      # 2. Remover la bandera -G incompatible con Clang/ARM64 en Isar
+      ['OTHER_CFLAGS', 'OTHER_CPLUSPLUSFLAGS', 'COMPILER_INDEX_STORE_ENABLE'].each do |flag_key|
+        if config.build_settings[flag_key].is_a?(String)
+          config.build_settings[flag_key] = config.build_settings[flag_key].gsub('-G', '')
+        elsif config.build_settings[flag_key].is_a?(Array)
+          config.build_settings[flag_key] = config.build_settings[flag_key].map { |f| f.gsub('-G', '') }
+        end
+      end
     end
   end
 end
