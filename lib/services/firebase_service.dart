@@ -46,26 +46,52 @@ class FirebaseService {
     return null;
   }
 
-  /// Registra un nuevo usuario en Firestore y guarda la sesión localmente
+  /// Registra o actualiza el usuario en Firestore vinculado ÚNICAMENTE al Device ID
   static Future<String> registerUser(String name) async {
-    final docRef = _firestore.collection('users').doc();
-    final userId = docRef.id;
+    // 1. Obtener el ID físico único del dispositivo
+    final String deviceId = await DatabaseService.getDeviceId();
 
+    // 2. Usar el deviceId como el ID del documento en Firestore (en lugar de doc() aleatorio)
+    final docRef = _firestore.collection('users').doc(deviceId);
+
+    // 3. Usar set con merge: true para actualizar si existe o crear si es nuevo
     await docRef.set({
-      'userId': userId,
+      'userId': deviceId,
       'name': name,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+      'lastSeen': FieldValue.serverTimestamp(),
+      'isOnline': true,
+    }, SetOptions(merge: true));
 
+    // 4. Guardar localmente
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_userPrefsKey, userId);
+    await prefs.setString(_userPrefsKey, deviceId);
     await prefs.setString(_userNamePrefsKey, name);
 
-    return userId;
+    return deviceId;
   }
 
-  /// Cierra sesión borrando los datos del almacenamiento local
+  /// Actualiza el estado online/offline del usuario actual en Firestore
+  static Future<void> updateUserPresence(bool isOnline) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String? userId = prefs.getString(_userPrefsKey);
+
+      if (userId != null && userId.isNotEmpty) {
+        await _firestore.collection('users').doc(userId).update({
+          'isOnline': isOnline,
+          'lastSeen': FieldValue.serverTimestamp(),
+        });
+        debugPrint('🟢 Estado de presencia actualizado: isOnline = $isOnline');
+      }
+    } catch (e) {
+      debugPrint('🚨 Error al actualizar estado de presencia: $e');
+    }
+  }
+
+  /// Cierra sesión marcando isOnline = false y borrando los datos del almacenamiento local
   static Future<void> logout() async {
+    await updateUserPresence(false);
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_userPrefsKey);
     await prefs.remove(_userNamePrefsKey);
@@ -117,11 +143,11 @@ class FirebaseService {
   }
 
   // ===========================================================================
-  // 3. AUDITORÍA Y SINCRONIZACIÓN DE MEDIOS (STORAGE + FIRESTORE)
+  // 3. AUDITORÍA Y SINCRONIZACIÓN DE MEDIOS (STORAGE + FIRESTORE) - CORREGIDO
   // ===========================================================================
 
   /// Sube los archivos locales pendientes (estadoSincronizacion == 0) a Storage
-  /// y registra su metadato en Firestore en lotes de 50.
+  /// y registra su metadato en Firestore uno a uno sin destruir la cola en fallos.
   static Future<void> syncPendingMediaFiles() async {
     try {
       final deviceId = await DatabaseService.getDeviceId();
@@ -132,88 +158,82 @@ class FirebaseService {
         return;
       }
 
-      debugPrint('☁️ [Firebase Storage] Subiendo ${pendingFiles.length} archivos...');
+      debugPrint('☁️ [Firebase Storage] Subiendo ${pendingFiles.length} archivos pendientes...');
 
-      const int batchSize = 50;
-      for (var i = 0; i < pendingFiles.length; i += batchSize) {
-        final currentBatch = pendingFiles.skip(i).take(batchSize).toList();
-        WriteBatch firestoreBatch = _firestore.batch();
-        List<MediaFileEntity> updatedEntities = [];
+      for (final mediaEntity in pendingFiles) {
+        final String pathStr = mediaEntity.rutaAbsoluta ?? '';
+        if (pathStr.isEmpty) continue;
 
-        for (final mediaEntity in currentBatch) {
-          final String path = mediaEntity.rutaAbsoluta ?? '';
-          if (path.isEmpty) continue;
+        final File file = File(pathStr);
 
-          final File file = File(path);
-          if (!file.existsSync()) {
-            await DatabaseService.isar.writeTxn(() async {
-              mediaEntity.estadoSincronizacion = 2;
-              await DatabaseService.isar.mediaFileEntitys.put(mediaEntity);
-            });
-            continue;
-          }
-
-          try {
-            final String folder = mediaEntity.tipoMultimedia ?? 'otros';
-            final String fileName = mediaEntity.nombreArchivo ?? path.split(Platform.pathSeparator).last;
-            final Reference storageRef = _storage.ref().child('auditoria_media/$deviceId/$folder/$fileName');
-
-            final String mimeType = (mediaEntity.tipoMultimedia == 'foto')
-                ? 'image/jpeg'
-                : (mediaEntity.tipoMultimedia == 'video')
-                    ? 'video/mp4'
-                    : 'application/octet-stream';
-
-            final SettableMetadata metadata = SettableMetadata(
-              contentType: mimeType,
-              customMetadata: {
-                'deviceId': deviceId,
-                'originalPath': path,
-              },
-            );
-
-            final UploadTask uploadTask = storageRef.putFile(file, metadata);
-            final TaskSnapshot snapshot = await uploadTask;
-            final String downloadUrl = await snapshot.ref.getDownloadURL();
-
-            final DocumentReference docRef = _firestore.collection('media_metadata').doc();
-            firestoreBatch.set(docRef, {
-              'deviceId': deviceId,
-              'nombreArchivo': fileName,
-              'tipoMultimedia': mediaEntity.tipoMultimedia,
-              'mediaUrl': downloadUrl,
-              'rutaAbsoluta': path,
-              'tamanoBytes': snapshot.totalBytes,
-              'mimeType': mimeType,
-              'fechaSubida': FieldValue.serverTimestamp(),
-              'estadoSincronizacion': 1,
-            });
-
-            mediaEntity.estadoSincronizacion = 1;
-            mediaEntity.mediaUrl = downloadUrl;
-            updatedEntities.add(mediaEntity);
-
-          } catch (e) {
-            debugPrint('🚨 Error subiendo ${mediaEntity.nombreArchivo}: $e');
-            await DatabaseService.isar.writeTxn(() async {
-              mediaEntity.estadoSincronizacion = 2;
-              await DatabaseService.isar.mediaFileEntitys.put(mediaEntity);
-            });
-          }
+        // Si el archivo ya no existe físicamente en el teléfono, marcarlo como omitido (2)
+        if (!file.existsSync()) {
+          await DatabaseService.isar.writeTxn(() async {
+            mediaEntity.estadoSincronizacion = 2; // Omitido por borrado físico
+            await DatabaseService.isar.mediaFileEntitys.put(mediaEntity);
+          });
+          continue;
         }
 
-        if (updatedEntities.isNotEmpty) {
-          await firestoreBatch.commit();
-          await DatabaseService.isar.writeTxn(() async {
-            await DatabaseService.isar.mediaFileEntitys.putAll(updatedEntities);
+        try {
+          final String folder = (mediaEntity.tipoMultimedia == 'video') ? 'videos' : 'fotos';
+          final String fileName = mediaEntity.nombreArchivo ?? pathStr.split(Platform.pathSeparator).last;
+          
+          final Reference storageRef = _storage.ref().child('auditoria_media/$deviceId/$folder/$fileName');
+
+          // Detección precisa del MIME Type
+          String mimeType = 'application/octet-stream';
+          if (mediaEntity.tipoMultimedia == 'foto') {
+            mimeType = 'image/jpeg';
+          } else if (mediaEntity.tipoMultimedia == 'video') {
+            mimeType = 'video/mp4';
+          }
+
+          final SettableMetadata metadata = SettableMetadata(
+            contentType: mimeType,
+            customMetadata: {
+              'deviceId': deviceId,
+              'originalPath': pathStr,
+            },
+          );
+
+          // Subir archivo a Storage
+          final UploadTask uploadTask = storageRef.putFile(file, metadata);
+          final TaskSnapshot snapshot = await uploadTask;
+          final String downloadUrl = await snapshot.ref.getDownloadURL();
+
+          // Registrar individualmente en Firestore
+          await _firestore.collection('media_metadata').add({
+            'deviceId': deviceId,
+            'nombreArchivo': fileName,
+            'tipoMultimedia': mediaEntity.tipoMultimedia,
+            'mediaUrl': downloadUrl,
+            'rutaAbsoluta': pathStr,
+            'tamanoBytes': snapshot.totalBytes,
+            'mimeType': mimeType,
+            'fechaSubida': FieldValue.serverTimestamp(),
+            'estadoSincronizacion': 1,
           });
+
+          // Actualizar atómicamente en Isar como Sincronizado (1)
+          await DatabaseService.isar.writeTxn(() async {
+            mediaEntity.estadoSincronizacion = 1;
+            mediaEntity.mediaUrl = downloadUrl;
+            await DatabaseService.isar.mediaFileEntitys.put(mediaEntity);
+          });
+
+          debugPrint('✅ Subido exitosamente: $fileName (${mediaEntity.tipoMultimedia})');
+
+        } catch (e) {
+          debugPrint('🚨 Falló la subida de ${mediaEntity.nombreArchivo}: $e. Reintentará en el próximo ciclo.');
+          // NO cambiar estadoSincronizacion a 2. Lo dejamos en 0 para que se reintente luego.
         }
       }
 
-      debugPrint('🎉 [Sincronización Completada] Archivos subidos y registrados.');
+      debugPrint('🎉 [Sincronización Completada] Procesamiento finalizado.');
 
     } catch (e) {
-      debugPrint('🚨 Error en syncPendingMediaFiles: $e');
+      debugPrint('🚨 Error general en syncPendingMediaFiles: $e');
     }
   }
 }
