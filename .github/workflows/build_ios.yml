@@ -3,50 +3,54 @@ name: Compilar Flutter para iOS
 on:
   push:
     branches:
-      - main       # Se ejecuta automáticamente al hacer push a 'main'
-      - master     # o 'master' (ajusta según el nombre de tu rama)
-  workflow_dispatch: # Permite ejecutar el proceso manualmente desde GitHub
+      - main
+      - master
+  workflow_dispatch:
 
 jobs:
   build-ios:
-    runs-on: macos-latest # Utiliza máquinas con macOS de GitHub
+    runs-on: macos-latest
 
     steps:
-      # 1. Descargar el código fuente del repositorio
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      # 2. Configurar el entorno de Java (Requerido por algunas herramientas de Flutter)
       - name: Configurar Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      # 3. Instalar y configurar Flutter SDK
       - name: Configurar Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           architecture: x64
 
-      # 4. Descargar dependencias del pubspec.yaml
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
-      # 5. Compilar la aplicación para iOS (Modo no firmado para pruebas o desarrollo)
+      # Regenera enlaces y la carpeta ios/Flutter/podhelper.rb
+      - name: Regenerar enlaces nativos de iOS
+        run: flutter create . --platforms=ios
+
+      # Reinstala los pods aplicando nuestro Podfile (con iOS 13.0 forzado)
+      - name: Actualizar e Instalar CocoaPods
+        run: |
+          cd ios
+          pod install --repo-update
+          cd ..
+
       - name: Compilar iOS (No-codesign)
         run: flutter build ios --release --no-codesign
 
-      # 6. Empaquetar la app en formato .ipa comprimido
-      - name: Crear paquete .ipa / Runner.app
+      - name: Crear paquete .ipa
         run: |
           cd build/ios/iphoneos
           mkdir Payload
           mv Runner.app Payload/
           zip -r Runner.ipa Payload
 
-      # 7. Subir el ejecutable .ipa como Artefacto descargable
       - name: Subir artefacto IPA
         uses: actions/upload-artifact@v4
         with:
