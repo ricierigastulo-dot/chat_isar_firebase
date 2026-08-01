@@ -29,11 +29,16 @@ jobs:
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
-      # Compilación oficial de Flutter inyectando tolerancia a flags desconocidas
+      # PASO CLAVE: Elimina el flag '-G' directo de las fuentes de isar_flutter_libs en pub-cache
+      - name: Corregir flag -G en Isar
+        run: |
+          ISAR_PODSPEC=$(find ~/.pub-cache -name "isar_flutter_libs.podspec" 2>/dev/null | head -n 1)
+          if [ -n "$ISAR_PODSPEC" ]; then
+            echo "Encontrado podspec de Isar en: $ISAR_PODSPEC"
+            sed -i '' 's/-G//g' "$ISAR_PODSPEC"
+          fi
+
       - name: Compilar iOS (No-codesign)
-        env:
-          OTHER_CFLAGS: "-Wno-error=unused-command-line-argument -Qunused-arguments"
-          OTHER_CPLUSPLUSFLAGS: "-Wno-error=unused-command-line-argument -Qunused-arguments"
         run: flutter build ios --release --no-codesign
 
       - name: Crear paquete .ipa
