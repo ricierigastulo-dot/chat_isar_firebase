@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-ios:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
       - name: Checkout del código
@@ -25,12 +25,10 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          architecture: x64
 
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
-      # Flutter se encarga de crear podhelper.rb, sincronizar CocoaPods y compilar
       - name: Compilar iOS (No-codesign)
         run: flutter build ios --release --no-codesign
 
