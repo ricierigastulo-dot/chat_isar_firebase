@@ -26,29 +26,28 @@ jobs:
         with:
           channel: 'stable'
 
+      # PASO CLAVE 1: Desarmar la bandera -G globalmente en la VM
+      - name: Purga Global de bandera -G en el Runner
+        run: |
+          echo "Limpiando referencias -G del sistema..."
+          find ~/.pub-cache /Users/runner/hostedtoolcache -type f \( -name "*.pbxproj" -o -name "*.xcconfig" -o -name "*.modulemap" -o -name "*.json" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
+
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
-      - name: Sanitizar y Regenerar Pods de iOS
+      # PASO CLAVE 2: Limpieza de Pods y de FlutterGeneratedPluginSwiftPackage
+      - name: Sanitizar iOS Workspace y Swift Packages
         run: |
           cd ios
-          rm -rf Pods Podfile.lock
+          rm -rf Pods Podfile.lock .symlinks Flutter/ephemeral
           pod install --repo-update
-          
-          # Limpiar -G en todos los archivos del proyecto y pods generados
-          find . -type f \( -name "*.pbxproj" -o -name "*.xcconfig" -o -name "*.plist" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
+          find . -type f \( -name "*.pbxproj" -o -name "*.xcconfig" -o -name "*.modulemap" -o -name "*.plist" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
           cd ..
 
-      - name: Compilar iOS con Override de Banderas C/C++
-        env:
-          # Sobreescribir banderas del sistema eliminando -G
-          CFLAGS: "-Wno-error"
-          CXXFLAGS: "-Wno-error"
-          OTHER_CFLAGS: ""
-          OTHER_CPLUSPLUSFLAGS: ""
+      # PASO CLAVE 3: Compilación directa desactivando la bandera -G en xcodebuild
+      - name: Compilar iOS (No-codesign)
         run: |
-          flutter build ios --release --no-codesign --extra-front-end-options="--no-defines" || \
-          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO OTHER_CFLAGS="" OTHER_CPLUSPLUSFLAGS="" build
+          flutter build ios --release --no-codesign --extra-front-end-options="--no-defines"
 
       - name: Crear paquete .ipa
         run: |
