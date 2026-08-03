@@ -26,28 +26,22 @@ jobs:
         with:
           channel: 'stable'
 
-      # PASO CLAVE 1: Desarmar la bandera -G globalmente en la VM
-      - name: Purga Global de bandera -G en el Runner
+      - name: Desactivar Swift Package Manager en Flutter
         run: |
-          echo "Limpiando referencias -G del sistema..."
-          find ~/.pub-cache /Users/runner/hostedtoolcache -type f \( -name "*.pbxproj" -o -name "*.xcconfig" -o -name "*.modulemap" -o -name "*.json" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
+          flutter config --no-enable-swift-package-manager
 
       - name: Obtener dependencias de Flutter
         run: flutter pub get
 
-      # PASO CLAVE 2: Limpieza de Pods y de FlutterGeneratedPluginSwiftPackage
-      - name: Sanitizar iOS Workspace y Swift Packages
+      - name: Preparar Pods de iOS
         run: |
           cd ios
-          rm -rf Pods Podfile.lock .symlinks Flutter/ephemeral
+          rm -rf Pods Podfile.lock Flutter/ephemeral
           pod install --repo-update
-          find . -type f \( -name "*.pbxproj" -o -name "*.xcconfig" -o -name "*.modulemap" -o -name "*.plist" \) -exec sed -i '' 's/-G[0-9]*//g' {} + || true
           cd ..
 
-      # PASO CLAVE 3: Compilación directa desactivando la bandera -G en xcodebuild
       - name: Compilar iOS (No-codesign)
-        run: |
-          flutter build ios --release --no-codesign --extra-front-end-options="--no-defines"
+        run: flutter build ios --release --no-codesign
 
       - name: Crear paquete .ipa
         run: |
